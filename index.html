@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link rel="icon" href="img/icon-logo.jpg">
     <title>Четыре в ряд</title>
-  <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
@@ -13,7 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Лучшая в мире игра: Четыре в ряд!</h1>
+<header>
+    <h1>Лучшая в мире игра: Четыре в ряд!</h1>
+</header>
 <table>
     <tr>
         <td></td>
@@ -70,8 +72,23 @@
         <td></td>
     </tr>
 </table>
+<!--Об игре-->
+<div class="aboutGame">
+    <h2>Об игре:</h2>
+    <p> Игра для двоих, в которой игроки сначала выбирают цвет фишек, а затем ходят по очереди, роняя фишки в ячейки
+        вертикальной доски.</p><br>
+    <p>Цель игры — расположить раньше противника подряд по горизонтали, вертикали или диагонали
+        четыре фишки своего цвета.</p>
+</div>
+<!--Определение очередности хода-->
+<div class="playersMove">
+    <h2>Ход игрока:</h2>
+    <div class="move" id="moves"></div>
+</div>
+<button class="newGame" id="newGameBtn">Новая игра</button>
 <footer>
-    <p>Все торговые марки принадлежат законным правообладателям. Копирование и распространение без согласия автора подлежит преследованию.</p>
+    <p>Все торговые марки принадлежат законным правообладателям. Копирование и распространение без согласия автора
+        подлежит преследованию.</p>
 </footer>
 <script src="game.js"></script>
 </body>
