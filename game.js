@@ -38,7 +38,6 @@ let startNewGame = function () {
 newGameBtn.addEventListener('click', startNewGame);
 startNewGame()
 
-document.addEventListener('DOMContentLoaded', () => {
     board.addEventListener("click", function (event) {
         let cell = event.target;
         // let row = parseInt(cell.getAttribute("data-row"));
@@ -85,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startNewGame()
-})
 
 function updateBoard() {
     // Проверка на выигрышную комбинацию
@@ -187,8 +185,6 @@ function winningCombo() {
 
 async function outlineWin(combo) {
     for (let i in combo) {
-        console.log(combo[i][0], combo[i][1])
-
         let board = document.querySelector(`#board`)
         let row = Array.from(board.children)[combo[i][0]]
         let cell = Array.from(row.children)[combo[i][1]]
