@@ -4,20 +4,28 @@ let cols = 7; // количество столбцов
 let moves = document.getElementById("moves")
 moves.classList.add("red")
 let currentPlayer = 'red'; //Старт с красного игрока
+let chip = "";
+let chipOffset = 0;
 emptyCells = rows * cols;
 let winningCombinations = [];
 let board = document.getElementById("board");
 // Создание двумерного массива для хранения состояния игрового поля
 let gameBoard = new Array(rows);
 let isGameOver = false
-
 let newGameBtn = document.getElementById("newGameBtn")
+let newChip = document.createElement("div")
+newChip.classList.add("newChip")
+newChip.classList.add(currentPlayer)
 let startNewGame = function () {
 // Генерация игрового поля
     for (let i = 0; i < rows; i++) {
         gameBoard[i] = new Array(cols).fill("empty");
     }
     board.innerHTML = "";
+    chip = document.createElement("div")
+    chip.classList.add("chip")
+    chip.classList.add("hover-chip")
+    chip.classList.add(currentPlayer)
     for (let i = 0; i < rows; i++) {
         let row = document.createElement("div");
         row.className = "row";
@@ -28,76 +36,96 @@ let startNewGame = function () {
             cell.setAttribute("data-col", String(j));
             cell.classList.add("empty");
             row.appendChild(cell);
+            cell.onmouseover = function () {
+                if (!isGameOver) {
+                    document.querySelector(".hover-chip").style.left = `${j * 100}px`
+                }
+            }
         }
         board.appendChild(row);
+        board.appendChild(chip)
     }
     winningCombinations = winningCombo()
     isGameOver = false
     document.getElementById("result").innerHTML = ``;
+    board.classList.remove("boom")
 }
 newGameBtn.addEventListener('click', startNewGame);
 startNewGame()
 
-    board.addEventListener("click", function (event) {
-        let cell = event.target;
-        // let row = parseInt(cell.getAttribute("data-row"));
-        let col = parseInt(cell.getAttribute("data-col"));
-
-        if (placeChip(col)) {
-            emptyCells--
-            // Обновление состояния игрового поля и отрисовка фишки
-            updateBoard();
-        }
-    })
-
-    function isCellEmpty(cell) {
-        if (typeof cell === "string") {
-            return cell === "empty";
-        }
-
-        return cell.classList.contains("empty")
+board.addEventListener("click", function (event) {
+    let cell = event.target;
+    let col = parseInt(cell.getAttribute("data-col"));
+    if (placeChip(col)) {
+        emptyCells--
+        // Обновление состояния игрового поля и отрисовка фишки
+        updateBoard();
     }
+})
 
-    function placeChip(col) {
-        if (isGameOver) {
-            return false
-        }
-
-        let success = false
-
-        // функция вставки фишки
-        for (let i = gameBoard.length-1; i >= 0  ; i --) {
-            if (isCellEmpty(gameBoard[i][col])) {
-                let board = document.querySelector(`#board`)
-                let row = Array.from(board.children)[i]
-                let cell = Array.from(row.children)[col]
-
-                cell.classList.remove('empty');
-                cell.classList.add(currentPlayer);
-                gameBoard[i][col] = currentPlayer
-
-                success = true
-                break;
-            }
-        }
-        return success
+function isCellEmpty(cell) {
+    if (typeof cell === "string") {
+        return cell === "empty";
     }
+    return cell.classList.contains("empty")
+}
 
-    startNewGame()
+function placeChip(col) {
+    if (isGameOver) {
+        return false
+    }
+    let success = false
+    // функция вставки фишки
+    for (let i = gameBoard.length - 1; i >= 0; i--) {
+        if (isCellEmpty(gameBoard[i][col])) {
+            let board = document.querySelector(`#board`)
+            let row = Array.from(board.children)[i]
+            let cell = Array.from(row.children)[col]
+            let chip = document.querySelector(".hover-chip")
+
+            chipOffset = chip.style.left
+            chip.style.top = `${cell.getBoundingClientRect().y - document.getElementById("board").getBoundingClientRect().y - 4}px`
+            setTimeout(() => {
+                chip.remove()
+            }, 150)
+
+            cell.classList.remove('empty');
+            cell.classList.add(currentPlayer);
+            gameBoard[i][col] = currentPlayer
+            success = true
+            break;
+        }
+    }
+    return success
+}
 
 function updateBoard() {
     // Проверка на выигрышную комбинацию
+
     if (!checkWin()) {
+
+        let newChip = document.createElement("div")
+        newChip.classList.add("chip")
+        newChip.classList.add("hover-chip")
+        newChip.classList.add(currentPlayer === "red" ? "yellow" : "red")
+        let chip = document.querySelector(".hover-chip")
         // Смена текущего игрока
         if (currentPlayer === "red") {
             currentPlayer = "yellow"
             moves.classList.remove("red")
             moves.classList.add("yellow")
+            chip.classList.remove("red")
+            chip.classList.add("yellow")
         } else {
             currentPlayer = "red"
             moves.classList.remove("yellow")
             moves.classList.add("red")
+            chip.classList.remove("yellow")
+            chip.classList.add("red")
         }
+
+        newChip.style.left = chipOffset
+        board.appendChild(newChip)
     }
 }
 
@@ -119,6 +147,7 @@ function checkWin() {
             outlineWin(winningCombinations[i]).then()
             let winner = currentPlayer === "red" ? "красный" : "жёлтый"
             document.getElementById("result").innerHTML = `Игра окончена! Победил ${winner} игрок`;
+            board.classList.add("boom")
             return true;
         }
     }
