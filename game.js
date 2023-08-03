@@ -53,22 +53,21 @@ let startNewGame = function () {
 newGameBtn.addEventListener('click', startNewGame);
 startNewGame()
 
-board.addEventListener("click", function (event) {
-    let cell = event.target;
-    let col = parseInt(cell.getAttribute("data-col"));
-    if (placeChip(col)) {
-        emptyCells--
-        // Обновление состояния игрового поля и отрисовка фишки
-        updateBoard();
-    }
-})
+    board.addEventListener("click", function (event) {
+        let cell = event.target;
+        let col = parseInt(cell.getAttribute("data-col"));
+        if (placeChip(col)) {
+            emptyCells--
+            // Обновление состояния игрового поля и отрисовка фишки
+            updateBoard();
+        }
+    })
 
-function isCellEmpty(cell) {
-    if (typeof cell === "string") {
-        return cell === "empty";
+    function isCellEmpty(cell) {
+        if (typeof cell === "string") {
+            return cell === "empty";
+        }
     }
-    return cell.classList.contains("empty")
-}
 
 function placeChip(col) {
     if (isGameOver) {
@@ -89,16 +88,15 @@ function placeChip(col) {
                 chip.remove()
             }, 150)
 
-            cell.classList.remove('empty');
-            cell.classList.add(currentPlayer);
-            gameBoard[i][col] = currentPlayer
-            success = true
-            break;
+                cell.classList.remove('empty');
+                cell.classList.add(currentPlayer);
+                gameBoard[i][col] = currentPlayer
+                success = true
+                break;
+            }
         }
+        return success
     }
-    return success
-}
-
 function updateBoard() {
     // Проверка на выигрышную комбинацию
 
@@ -128,7 +126,6 @@ function updateBoard() {
         board.appendChild(newChip)
     }
 }
-
 function checkWin() {
     // Проверка каждой комбинации на наличие выигрышной
     for (let i = 0; i < winningCombinations.length; i++) {
